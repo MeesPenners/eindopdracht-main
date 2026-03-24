@@ -8,7 +8,7 @@ use App\Http\Controllers\VehiclesController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 // All authenticated routes

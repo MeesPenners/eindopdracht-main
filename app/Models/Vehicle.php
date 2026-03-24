@@ -4,7 +4,6 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Models\chassis\Chassis;
 use App\Models\drives\Drive;
@@ -27,10 +26,9 @@ class Vehicle extends Model
         'total_cost',
         'total_time',
         'status_id',
-        'robot',
+        'robot_id',
     ];
 
-    use HasFactory;
     /**
      * Define the relationship with the module models.
      */

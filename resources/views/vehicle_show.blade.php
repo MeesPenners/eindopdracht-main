@@ -1,13 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Vehicle Details') }}
         </h2>
     </x-slot>
 
-    <div class="py-10">
-        <div class="max-w-4xl mx-auto px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 shadow rounded-2xl p-6 space-y-6">
+    <x-content-panel
+        outerClass="py-10"
+        containerClass="max-w-4xl mx-auto px-6 lg:px-8"
+        cardClass="bg-white dark:bg-gray-800 shadow rounded-2xl"
+        bodyClass="p-6 space-y-6 text-gray-900 dark:text-gray-100">
 
                 <!-- Vehicle Name & Info -->
                 <div class="text-center">
@@ -20,46 +22,31 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
                     <!-- Chassis Module -->
-                    <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center">
-                        <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3 text-center">Chassis</h4>
-                        <p class="text-gray-700 dark:text-gray-300 mb-2 text-center">{{ $vehicle->chassis->name }}</p>
-                        <img src="{{ asset('images/' . $vehicle->chassis->image) }}" alt="Chassis Image" class="mt-2 w-40 h-32 object-contain rounded-md shadow-lg">
-                    </div>
+                    @if($vehicle->chassis)
+                        <x-module-card title="Chassis" :name="$vehicle->chassis->name" :image="$vehicle->chassis->image" />
+                    @endif
 
                     <!-- Drive Module -->
-                    <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center">
-                        <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3 text-center">Drive</h4>
-                        <p class="text-gray-700 dark:text-gray-300 mb-2 text-center">{{ $vehicle->drive->name }}</p>
-                        <img src="{{ asset('images/' . $vehicle->drive->image) }}" alt="Drive Image" class="mt-2 w-40 h-32 object-contain rounded-md shadow-lg">
-                    </div>
+                    @if($vehicle->drive)
+                        <x-module-card title="Drive" :name="$vehicle->drive->name" :image="$vehicle->drive->image" />
+                    @endif
 
                     <!-- Wheel Module -->
-                    <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center">
-                        <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3 text-center">Wheel</h4>
-                        <p class="text-gray-700 dark:text-gray-300 mb-2 text-center">{{ $vehicle->wheel->name }}</p>
-                        <img src="{{ asset('images/' . $vehicle->wheel->image) }}" alt="Wheel Image" class="mt-2 w-40 h-32 object-contain rounded-md shadow-lg">
-                    </div>
+                    @if($vehicle->wheel)
+                        <x-module-card title="Wheel" :name="$vehicle->wheel->name" :image="$vehicle->wheel->image" />
+                    @endif
 
                     <!-- Steering Wheel Module -->
-                    <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center">
-                        <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3 text-center">Steering Wheel</h4>
-                        <p class="text-gray-700 dark:text-gray-300 mb-2 text-center">{{ $vehicle->steering_wheel->name }}</p>
-                        <img src="{{ asset('images/' . $vehicle->steering_wheel->image) }}" alt="Steering Wheel Image" class="mt-2 w-40 h-32 object-contain rounded-md shadow-lg">
-                    </div>
+                    @if($vehicle->steering_wheel)
+                        <x-module-card title="Steering Wheel" :name="$vehicle->steering_wheel->name" :image="$vehicle->steering_wheel->image" />
+                    @endif
 
                     <!-- Seat Module -->
-                    <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center">
-                        <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3 text-center">Seat</h4>
-                        <p class="text-gray-700 dark:text-gray-300 mb-2 text-center">{{ $vehicle->seat->name }} (x{{ $vehicle->seat_amount }})</p>
-                        <img src="{{ asset('images/' . $vehicle->seat->image) }}" alt="Seat Image" class="mt-2 w-40 h-32 object-contain rounded-md shadow-lg">
-                    </div>
+                    @if($vehicle->seat)
+                        <x-module-card title="Seat" :name="$vehicle->seat->name . ' (x' . $vehicle->seat_amount . ')'" :image="$vehicle->seat->image" />
+                    @endif
 
                 </div>
 
-            </div>
-        </div>
-    </div>
-
-
-
+    </x-content-panel>
 </x-app-layout>

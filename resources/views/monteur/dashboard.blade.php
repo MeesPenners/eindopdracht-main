@@ -1,51 +1,48 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Monteur Dashboard') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-lg font-semibold mb-4">{{ __("Voertuig assemblage") }}</h3>
-                    @if (empty($selectedChassisId))
+    <x-content-panel>
+        <h3 class="text-lg font-semibold mb-4">{{ __("Voertuig assemblage") }}</h3>
+        @if (empty($selectedChassisId))
                     <!-- Form -->
                     <form method="POST" action="{{ route('monteur.chassis') }}">
                         @csrf
 
-                        <div class="mb-6">
-                            <label for="carname" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Car name</label>
-                            <input type="text" id="carname" name="car_name" value="" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" required>
-                        </div>
+                        <x-form-input
+                            label="Car name"
+                            name="car_name"
+                            type="text"
+                            required
+                        />
 
-                        <!-- Customer Selection -->
-                        <div class="mb-6">
-                            <label for="customer" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Customer</label>
-                            <select id="customer" name="customer_id" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" required>
-                                <option value="" disabled selected>Select a customer</option>
-                                @foreach ($customers as $customer)
+                        <x-form-select
+                            label="Customer"
+                            name="customer_id"
+                            placeholder="Select a customer"
+                            required
+                        >
+                            @foreach ($customers as $customer)
                                 <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                            @endforeach
+                        </x-form-select>
 
-                        <!-- Chassis Selection -->
-                        <div class="mb-6">
-                            <label for="chassis" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Chassis</label>
-                            <select id="chassis" name="chassis_id" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" required>
-                                <option value="" disabled selected>Select a chassis</option>
-                                @foreach ($chassis as $chassisItem)
+                        <x-form-select
+                            label="Chassis"
+                            name="chassis_id"
+                            placeholder="Select a chassis"
+                            required
+                        >
+                            @foreach ($chassis as $chassisItem)
                                 <option value="{{ $chassisItem->id }}">{{ $chassisItem->name }} &#8594;&#8364;{{ $chassisItem->costs }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                            @endforeach
+                        </x-form-select>
 
                         <div class="mt-6">
-                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700">
-                                Submit
-                            </button>
+                            <x-table-action-button variant="submit" />
                         </div>
                         @endif
                     </form>
@@ -54,85 +51,89 @@
                     <form method="POST" action="{{ route('monteur.store') }}">
                         @csrf
 
-                        <!-- Pre-filled and Uneditable car name Field -->
-                        <div class="mb-6">
-                            <label for="carname" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Car name</label>
-                            <input type="text" id="carname" name="car_name" value="{{ $carName ?? 'Default car Name' }}" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" readonly>
-                        </div>
+                        <x-form-input
+                            label="Car name"
+                            name="car_name"
+                            type="text"
+                            :value="$carName ?? 'Default car Name'"
+                            readonly
+                        />
 
-                        <!-- Pre-filled and Uneditable Customer Field -->
-                        <div class="mb-6">
-                            <label for="customer" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Customer</label>
-                            <input type="text" value="{{ $selectedCustomerId->name ?? 'Default Customer Name' }}" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" readonly></input>
-                            <input type="hidden" id="customer" name="customer_id" value="{{ $selectedCustomerId->id }}" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" readonly></input>
-                        </div>
+                        <x-form-input
+                            label="Customer"
+                            name="customer_display"
+                            type="text"
+                            :value="$selectedCustomerId->name ?? 'Default Customer Name'"
+                            readonly
+                        />
+                        <input type="hidden" name="customer_id" value="{{ $selectedCustomerId->id }}" />
 
-                        <!-- Pre-filled and Uneditable Chassis Field -->
-                        <div class="mb-6">
-                            <label for="chassis" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Chassis</label>
-                            <input type="text" value="{{ $selectedChassisId->name ?? 'Default Chassis Name' }} &#8594;&#8364;{{ $selectedChassisId->costs }}" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" readonly></input>
-                            <input type="hidden" id="chassis" name="chassis_id" value="{{ $selectedChassisId->id }} " class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" readonly></input>
-                        </div>
-                        <!-- Wheels Selection -->
-                        <div class="mb-6">
-                            <label for="wheel" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Wheels</label>
-                            <select id="wheel" name="wheel_id" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" required>
-                                <option value="" disabled selected>Select a wheel</option>
-                                @foreach ($wheels as $wheel)
+                        <x-form-input
+                            label="Chassis"
+                            name="chassis_display"
+                            type="text"
+                            :value="html_entity_decode(($selectedChassisId->name ?? 'Default Chassis Name') . ' &#8594;&#8364;' . $selectedChassisId->costs)"
+                            readonly
+                        />
+                        <input type="hidden" name="chassis_id" value="{{ $selectedChassisId->id }}" />
+
+                        <x-form-select
+                            label="Wheels"
+                            name="wheel_id"
+                            placeholder="Select a wheel"
+                            required
+                        >
+                            @foreach ($wheels as $wheel)
                                 <option value="{{ $wheel->id }}">{{ $wheel->name }} &#8594;&#8364;{{ $wheel->costs }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <!-- drives Selection -->
-                        <div class="mb-6">
-                            <label for="drive" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Drive</label>
-                            <select id="drive" name="drive_id" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" required>
-                                <option value="" disabled selected>Select a drive</option>
-                                @foreach ($drives as $drive)
+                            @endforeach
+                        </x-form-select>
+
+                        <x-form-select
+                            label="Drive"
+                            name="drive_id"
+                            placeholder="Select a drive"
+                            required
+                        >
+                            @foreach ($drives as $drive)
                                 <option value="{{ $drive->id }}">{{ $drive->name }} &#8594;&#8364;{{ $drive->costs }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <!-- seats Selection -->
-                        <div class="mb-6">
-                            <label for="seat" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Seat type</label>
-                            <select id="seat" name="seat_id" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
-                                <option value="" disabled selected>Select a seat</option>
-                                @foreach ($seats as $seat)
+                            @endforeach
+                        </x-form-select>
+
+                        <x-form-select
+                            label="Seat type"
+                            name="seat_id"
+                            placeholder="Select a seat"
+                        >
+                            @foreach ($seats as $seat)
                                 <option value="{{ $seat->id }}">{{ $seat->name }} &#8594;&#8364;{{ $seat->costs }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <!-- Seats Amount Selection -->
-                        <div class="mb-6">
-                            <label for="seat_amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Number of Seats</label>
-                            <select id="seat_amount" name="seat_amount" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
-                                <option value="" disabled selected>Select the number of seats</option>
-                                @for ($i = 1; $i <= 10; $i++) <!-- Allow selection of 1 to 10 seats -->
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                    @endfor
-                            </select>
-                        </div>
-                        <!-- steeringWheel Selection -->
-                        <div class="mb-6">
-                            <label for="steeringWheel" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">steering wheel</label>
-                            <select id="steeringWheel" name="steering_wheel_id" class="block w-full mt-1 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" required>
-                                <option value="" disabled selected>Select a steering wheel</option>
-                                @foreach ($steeringWheels as $steeringWheel)
+                            @endforeach
+                        </x-form-select>
+
+                        <x-form-select
+                            label="Number of Seats"
+                            name="seat_amount"
+                            placeholder="Select the number of seats"
+                        >
+                            @for ($i = 1; $i <= 10; $i++)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </x-form-select>
+
+                        <x-form-select
+                            label="Steering wheel"
+                            name="steering_wheel_id"
+                            placeholder="Select a steering wheel"
+                            required
+                        >
+                            @foreach ($steeringWheels as $steeringWheel)
                                 <option value="{{ $steeringWheel->id }}">{{ $steeringWheel->name }} &#8594;&#8364;{{ $steeringWheel->costs }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                            @endforeach
+                        </x-form-select>
 
                         <div class="mt-6">
-                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700">
-                                Submit
-                            </button>
+                            <x-table-action-button variant="submit" />
                         </div>
                     </form>
                     @endif
-                </div>
-            </div>
-        </div>
-    </div>
+    </x-content-panel>
 </x-app-layout>

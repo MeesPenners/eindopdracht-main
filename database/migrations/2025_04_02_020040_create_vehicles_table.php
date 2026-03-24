@@ -34,6 +34,7 @@ return new class extends Migration
             $table->decimal('total_cost', 10, 2);
             $table->bigInteger('total_time')->comment('Time to assemble the vehicle in hours');
             $table->foreignId('status_id')->default('1')->constrained('statuses')->onDelete('cascade');
+            $table->foreignId('robot_id')->nullable()->constrained('robots')->onDelete('cascade');
             $table->timestamps();
         });
     }

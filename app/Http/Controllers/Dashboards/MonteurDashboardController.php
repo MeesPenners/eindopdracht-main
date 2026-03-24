@@ -29,8 +29,17 @@ class MonteurDashboardController extends Controller
         // Fetch data for the Monteur dashboard
         $chassis = Chassis::all();
         $customers = User::where('role_id', 1)->select('id', 'name')->get();
+        $drives = Drive::all();
+        $wheels = Wheel::all();
+        $seats = Seat::all();
+        $steeringWheels = SteeringWheel::all();
 
-        return view('monteur.dashboard', compact('chassis', 'customers', 'user'));
+        // Initialize optional variables
+        $selectedChassisId = null;
+        $selectedCustomerId = null;
+        $carName = null;
+
+        return view('monteur.dashboard', compact('chassis', 'customers', 'user', 'drives', 'wheels', 'seats', 'steeringWheels', 'selectedChassisId', 'selectedCustomerId', 'carName'));
     }
 
     public function chassis(Request $request)
